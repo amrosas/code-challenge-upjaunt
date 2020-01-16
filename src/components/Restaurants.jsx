@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Restaurants = restaurantList => {
+const Restaurants = ({restaurantList}) => {
   const list = restaurantList.map(restaurant => (
-    <li>{restaurant.name}</li>
+    <li>{restaurant.Place}</li>
   ))
   return (
     <div>
