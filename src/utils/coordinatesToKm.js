@@ -10,7 +10,7 @@ const convertLongitudeToKm = longitude => {
 
 export const getDistanceBetweenTwoCoordinates = (coordinate1, coordinate2) => {
   return Math.sqrt(
-    Math.pow(convertLatitudeToKm(coordinate2.latitude) - convertLatitudeToKm(coordinate1.latitude), 2) +
-    Math.pow(convertLongitudeToKm(coordinate2.longitude) - convertLongitudeToKm(coordinate1.longitude), 2)
+    Math.pow(convertLatitudeToKm(coordinate2.Latitude) - convertLatitudeToKm(coordinate1.Latitude), 2) +
+    Math.pow(convertLongitudeToKm(coordinate2.Longitude) - convertLongitudeToKm(coordinate1.Longitude), 2)
   )
 }

@@ -1,13 +1,13 @@
 import React from 'react';
 
-const Filters = ({filters, setFilters, getFilteredRestaurants, clearFilters, placeRef, tipsRef, latitudeRef, longitudeRef}) => {
+const Filters = ({filters, setFilters, getFilteredRestaurants, clearFilters}) => {
 
   return (
     <div> Filters:
-      <input type='text' ref={placeRef} id='place' placeholder='Place' onChange={setFilters} value={filters.place}/>
-      <input type='text' ref={tipsRef} id='tips' placeholder='Tips' onChange={setFilters} value={filters.tips}/>
-      <input type='text' ref={latitudeRef} id='latitude' placeholder='Latitude' onChange={setCoordinateFilters} value={filters.latitude}/>
-      <input type='text' ref={longitudeRef} id='longitude' placeholder='Longitude' onChange={setCoordinateFilters} value={filters.longitude}/>
+      <input type='text' id='Place' placeholder='Place' onChange={setFilters} value={filters.Place}/>
+      <input type='text' id='Tips' placeholder='Tips' onChange={setFilters} value={filters.Tips}/>
+      <input type='text' id='Latitude' placeholder='Latitude' onChange={setFilters} value={filters.Latitude}/>
+      <input type='text' id='Longitude' placeholder='Longitude' onChange={setFilters} value={filters.Longitude}/>
       <button type='button' onClick={getFilteredRestaurants}>Search</button>
       <button type='button' onClick={clearFilters}>Clear Filters</button>
     </div>

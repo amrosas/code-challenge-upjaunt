@@ -4,40 +4,32 @@ import Restaurants from '../components/Restaurants';
 import Filters from '../components/Filters';
 import { getDistanceBetweenTwoCoordinates } from '../utils/coordinatesToKm';
 
-const initialRestaurants = restaurantList.map(restaurant => {
-  restaurant.count = 0;
-  return restaurant;
-});
-
 class FilterPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       filters: {
-        place: '',
-        tips: '',
-        latitude: '',
-        longitude: ''
+        Place: '',
+        Tips: '',
+        Latitude: '',
+        Longitude: ''
       },
-      restaurants: initialRestaurants,
+      restaurants: restaurantList.map(restaurant => {
+        restaurant.count = 0;
+        return restaurant;
+      })
     };
-
-    this.placeRef = React.createRef();
-    this.tipsRef = React.createRef();
-    this.latitudeRef = React.createRef();
-    this.longitudeRef = React.createRef();
   }
 
   clearFilters = () => {
-    this.setState({
+    this.setState(prevState => ({
       filters: {},
-      restaurants: initialRestaurants.map(restaurant => {
-        if (this.state.restaurants[restaurant.name]) {
-          restaurant.count = this.state.restaurants[restaurant.name].count
-        }
+      restaurants: restaurantList.map(restaurant => {
+        const previousSearch = prevState.restaurants.find(stateRestaurant => stateRestaurant.Place === restaurant.Place);
+        restaurant.count = previousSearch ? previousSearch.count : 0;
         return restaurant;
       })
-    });
+    }));
   }
 
   setFilters = event => {
@@ -53,21 +45,37 @@ class FilterPage extends React.Component {
   getFilteredRestaurants = () => {
     let filteredRestaurants = this.state.restaurants;
     const textFilters = {
-      place: this.state.filters.place,
-      tips: this.state.filters.tips
+      Place: this.state.filters.Place,
+      Tips: this.state.filters.Tips
     };
 
-    Object.values(textFilters).forEach(filterName => {
+    Object.keys(textFilters).forEach(filterName => {
       if (textFilters[filterName]) {
-        filteredRestaurants = filteredRestaurants.filter(restaurant =>
-          restaurant[filterName].indexOf(textFilters[filterName]) > 0
+        filteredRestaurants = filteredRestaurants.filter(restaurant => 
+          restaurant[filterName].indexOf(textFilters[filterName]) >= 0
         );
       }
     });
 
-    filteredRestaurants = filteredRestaurants.filter(restaurant =>
-      getDistanceBetweenTwoCoordinates(restaurant, this.state.filters) < 1
-    );
+    if (this.state.filters.latitude || this.state.filters.longitude) {
+      filteredRestaurants = filteredRestaurants.filter(restaurant => {
+        const coordinateFilter = {
+          latitude: this.state.filters.latitude || restaurant.latitude,
+          longitude: this.state.filters.longitude || restaurant.longitude
+        };
+        return getDistanceBetweenTwoCoordinates(restaurant, coordinateFilter) < 1
+      }
+      );
+    }
+
+    filteredRestaurants.map(restaurant => {
+      restaurant.count++;
+      return restaurant;
+    })
+
+    this.setState({
+      restaurants: [].concat(filteredRestaurants)
+    });
   }
 
   render() {
@@ -83,7 +91,7 @@ class FilterPage extends React.Component {
           latitudeRef = {this.latitudeRef}
           longitudeRef = {this.longitudeRef}
         />
-        <Restaurants restaurantList={restaurantList} />
+        <Restaurants restaurantList={this.state.restaurants} />
       </div>
     );
   }
